@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                echo "Current branch is: ${env.BRANCH_NAME}"
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME == 'main') {
+                        echo "Deploying to PROD from branch: ${env.BRANCH_NAME}"
+                    } else if (env.BRANCH_NAME == 'develop') {
+                        echo "Deploying to DEV from branch: ${env.BRANCH_NAME}"
+                    } else {
+                        echo "Building feature branch: ${env.BRANCH_NAME}"
+                    }
+                }
+                echo 'Deploy complete.'
+            }
+        }
+    }
+}
