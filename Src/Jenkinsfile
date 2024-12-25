@@ -20,7 +20,7 @@ pipeline {
         stage('Execute Pipeline') {
             steps {
                 // 執行對應環境的 Jenkinsfile
-                load "JenkinMultiPipelineExample/${env.BRANCH_NAME}/Jenkinsfile"
+                load "cicd/JenkinMultiPipelineExample/${env.BRANCH_NAME}/Jenkinsfile"
             }
         }
     }
