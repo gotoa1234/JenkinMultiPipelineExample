@@ -1,26 +1,26 @@
 pipeline {
     agent any
     
+	environment {
+        CICD_REPO = 'https://github.com/gotoa1234/JenkinsCICDConfigure.git'
+        CICD_BRANCH = 'main'
+    }
+	
     stages {
-        stage('Checkout') {
+        stage('Checkout CICD Config') {
             steps {
-                checkout scm
-                echo "Current branch is: ${env.BRANCH_NAME}"
+                // 檢出 CICD 配置到 分支 目錄
+                dir('cicd') {
+                    git branch: env.CICD_BRANCH,
+                        url: env.CICD_REPO
+                }
             }
         }
         
-        stage('Deploy') {
+        stage('Execute Pipeline') {
             steps {
-                script {
-                    if (env.BRANCH_NAME == 'main') {
-                        echo "Deploying to PROD from branch: ${env.BRANCH_NAME}"
-                    } else if (env.BRANCH_NAME == 'develop') {
-                        echo "Deploying to DEV from branch: ${env.BRANCH_NAME}"
-                    } else {
-                        echo "Building feature branch: ${env.BRANCH_NAME}"
-                    }
-                }
-                echo 'Deploy complete.'
+                // 執行對應環境的 Jenkinsfile
+                load "JenkinMultiPipelineExample/${env.BRANCH_NAME}/Jenkinsfile"
             }
         }
     }
